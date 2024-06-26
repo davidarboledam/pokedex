@@ -1,0 +1,71 @@
+.home__items {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 20px;
+}
+
+@keyframes rotate {from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}}
+@-webkit-keyframes rotate {from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(360deg);}}
+
+.home__pokeball  {
+    background-image: url(/src/assets/Images/pokeball.png);
+    position: fixed;
+    -webkit-filter: brightness(200%);
+    filter: brightness(200%);
+    z-index: -1;
+    right: -90px;
+    top: -40px;
+    background-size: cover;
+    height: 400px;
+    width: 400px;
+    animation-direction: reverse;
+    animation: rotate 3s linear infinite;
+    transform-origin: 50% 50%;
+}
+.items__title {
+    height: 450px;
+    font-family: 'Montserrat', sans-serif;
+    
+}
+.home__input {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-top: 250px;
+}
+.home__input label {
+    font-family:'Montserrat', sans-serif;
+    text-align: center;
+    font-size: 1.2rem;
+}
+.home__input input {
+        width: 100%;
+        border: none;
+        border-radius: 30px;
+        outline: none;
+        font-size: 19px;
+        color: gray;
+        box-shadow: -10px -10px 15px #3a3a3a17,
+        10px 10px 15px #42424259;
+        transition: .5s;
+        padding: 10px 55px 10px 15px;
+        height: 50px;
+}
+.home__input button {
+    position: relative;
+    bottom: 85px;
+    left: 250px;  
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+    outline: 0;
+    background: #40ff2f;
+    color: #fff;
+}
