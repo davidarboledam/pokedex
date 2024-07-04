@@ -1,0 +1,25 @@
+.pokeinfo__stats__item{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 10px;
+    padding-right: 25px;
+}
+
+.pokeinfo__stats__item span:nth-child(2){
+    justify-self: end;
+}
+
+.outbar{
+    overflow:hidden;
+    grid-column: span 2;
+    border: 1px solid;
+    border-radius: 5px;
+    height: 20px;
+    width: 100%;
+}
+
+.inbar{
+    background-color: orangered;
+    width: 50%;
+    height: 100%;
+}

@@ -1,0 +1,40 @@
+.pokedex__wave{
+    color: red;
+}
+
+
+.pokesearch__form{
+    display: flex;
+    
+}
+
+.pokesearchform__btn{
+    position: absolute;
+    border:none;
+    height: 30px;
+    width: 100px;
+    font-size: 15px;
+    transition: .3s linear;
+    cursor: pointer;
+    border-radius: 5%;
+    gap: 10px;
+}
+
+
+.pokedex__filters{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 10px;
+    
+}
+
+.pokedex__container{
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 20px;
+    height: 100%;
+}

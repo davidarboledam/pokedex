@@ -1,42 +1,40 @@
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { useState  } from 'react'
-import { setName } from '../store/slices/name.slice'
+import { useRef, useState  } from 'react'
+import { setTrainer } from '../store/slices/trainer.slice'
 import ash from '../assets/Images/Ash.png'
+import "./styles/homePage.css"
 
 const Home = () => {
 
-  const [ userName, setUserName] = useState("")
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  
+  const textInput = useRef();
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    dispatch(setTrainer(textInput.current.value.trim()));
+    textInput.current.value = "";
+    navigate("/pokedex")
+  }
+  
 
-     const submit = (e) => {
-      e.preventDefault()
-      
-      if(userName !== "" ){
-        dispatch( setName(userName))
-        navigate('/pokedex')
-        localStorage.setItem("userName", userName)
-      } else {
-        alert('Please, introduce your name')
-        }
-      }
 
       
     return (
-        <main className='home'>
-          <div className='home__pokeball'/>
-            <div className='home__items'>
-              <div className='items__title'>
-              <h1>Hello trainer!</h1>
-              </div>
-              <img className='ash-img' src={ash} alt=''/>
-              <div >
-                <form className='home__input' onSubmit={submit}>
-                  <label htmlFor='nameId'>Give your name to start</label>
-                  <input value={userName} onChange={e => setUserName(e.target.value)} type='text' id="nameId" />
-                  <button type='submit'><i className='bx bx-send bx-md'></i></button>
+        <main>
+          <div className='home__container'>
+              <h1 className='home__title'>Hello trainer!</h1>
+              <figure className='home__img'>
+              <img src={ash} alt=''/>
+              </figure>
+              <div className='home__form'>
+                <form className='home__input' onSubmit={handleSubmit}>
+                  <div className="home__message">Give your name to start</div>
+                  <input className='home__input' ref={textInput} type="text" placeholder="Enter your Name"/> 
+                  <button className='home__btn' type='submit'>Start</button>
                 </form>
               </div>
           </div>

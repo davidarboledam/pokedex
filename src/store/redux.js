@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import name from './slices/name.slice'
+import trainer from './slices/trainer.slice'
 
 export default configureStore({
   reducer: {
-    name
+    trainer
 	}
 })

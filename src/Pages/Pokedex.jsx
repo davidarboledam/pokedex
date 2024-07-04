@@ -1,100 +1,76 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PokemonCard from '../../Components/PokemonCard'
-import Paginate from '../../Components/Paginate'
-import PokemonTypes from '../../Components/PokemonTypes'
-import PokemonByName from '../../Components/PokemonByName'
-import ButtonSwitch from '../../Components/ButtonSwitch'
+import PokeCard from '../../Components/PokeCard'
+import { useSelector } from 'react-redux'
+import useFetch from '../hooks/useFetch'
+import PokeSelect from '../../Components/PokeSelect'
+import "./styles/pokedex.css"
 
-const Pokedex = ({ pokemonsPerPage }) => {
+const Pokedex = () => {
 
-//All Pokemons state
-    const [ pokemonList, setPokemonList ] = useState([])
-//Page state
-    const [ currentPage, setCurrentPage ] = useState(1)
-    const [ isPaginated, setIsPaginated ] = useState(false)
-//Only search by name
-    const [ name, setName ] = useState([])
-    const [ isName, setIsName ] = useState(false)
+// Se trae desde el slice trainer, el nombre del trainer, el input que entregó el usuario
+    const trainer = useSelector((store) => store.trainer);
 
-//Either types or all pokemons
-    const [ isPokemonType, setIsPokemonType ] = useState(true)
-    const [ pokemonType, setPokemonType ] = useState([])
-//Render searchers
-    const [isOn, setIsOn] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+    
+    const [typeFilter, setTypeFilter] = useState();
 
-//Executing useNavigate
-    const navigate = useNavigate()
-
-//Exit button
-    const goBack = () => {
-        navigate("/")
-        localStorage.removeItem('userName')
-    }
+    const [pokemons, getPokemons, getType] = useFetch()
 
     useEffect(() => {
+       if (typeFilter ) {
+        getType(typeFilter);
+        }
+       else {
+        const url =  "https://pokeapi.co/api/v2/pokemon/?limit=10";
+        getPokemons(url);
+       } 
+      }, [typeFilter]);
+    
 
-    axios
-    .get("https://pokeapi.co/api/v2/pokemon?limit=1281&offset=0")
-    .then(resp => setPokemonList(resp?.data?.results))
-    .catch(error => console.error(error))
-  
-}, [])
+      const handleSubmit = (event) =>  {
+        event.preventDefault();
+        setInputValue(textInput.current.value.trim().toLowerCase())
+        textInput.current.value = "";
+      }
 
- const user = localStorage.getItem('userName')
+      const textInput = useRef();
 
- //Get pokemons
- const indexOfLastPokemon = currentPage * pokemonsPerPage;
- const indexOfFirstPokemon = indexOfLastPokemon - pokemonsPerPage;
- const currentPokemons = pokemonList.slice(indexOfFirstPokemon, indexOfLastPokemon)
-
- //Pagination per types
-
-const currentPokemonsType = pokemonType.slice(indexOfFirstPokemon, indexOfLastPokemon)
-
- //Change page
-
-
-//Redirect config page
-const configPage = () => {
-        navigate('/pokedex/config')
-}
+      const cbFilter = (poke) => {
+        return poke.name.includes(inputValue);
+      }
 
     return(
-        <main className='pokedex'>
-            <div className='pokedex__exit'>
-                <button onClick={goBack}><i className='bx bx-log-in bx-md' ></i></button>
+        <div className='pokedex'>
+            <div className='pokewave'>
+            <h3 className='pokedex__wave'><span>Welcome {trainer}, </span>Here you can find your favorite pokemon, let's go!</h3>
             </div>
-          <div className='pokedex__spinner'/>
-            <h1 className='pokedex__title'>Pokédex</h1>
-            <p className='pokedex__subtitle'>Welcome <strong>{user}</strong>, here you can find your favorite Pokémon</p>
-        <div className='container-switch'>
-           <h3>Type</h3> 
-                <ButtonSwitch setIsOn={setIsOn} isOn={isOn}/>
-           <h3>Pokémon</h3>
-         </div>
-            {isOn? 
-                <PokemonByName setIsName={setIsName} setName={setName} pokemonList={pokemonList} name={name}/>
-                :
-                <PokemonTypes setIsPokemonType={setIsPokemonType} setPokemonType={setPokemonType} setIsPaginated={setIsPaginated}/>           
-            }
-            <ul>
-                {isName? <PokemonCard url={name} /> : isPokemonType ?           currentPokemons?.map(element => 
-                    <li key={element.name}>
-                        <PokemonCard url={element.url}/>
-                    </li>) : 
-                    currentPokemonsType?.map(type => 
-                    <li key={type?.pokemon?.url}>
-                    <PokemonCard url={type?.pokemon?.url}/>
-                    </li> )
+            <div className='pokedex__filters'>
+                <div className='pokesearch__form'>
+                    <form onClick={handleSubmit}>
+                        <input ref={textInput} type="text" />
+                        <button className='pokesearchform__btn'>Search</button>
+                    </form>
+                </div>
+                <div className='poleselect'>
+                <PokeSelect 
+                    setTypeFilter={setTypeFilter}
+                    /> 
+                </div>
+            </div>
+            <div className='pokedex__container'>
+                {
+                    pokemons?.results?.filter(cbFilter).map((poke) => (
+                        <PokeCard 
+                            key={poke.url}
+                            url={poke.url}
+                        />
+                    ))
                 }
-            </ul>
-            <button className="config" onClick={configPage}><i className='bx bx-cog bx-md' ></i></button>
-            <div className={ `pagination ${isName? "is-Invisible" : ""}`}>
-                <Paginate pokemonsPerPage={pokemonsPerPage} totalPokemons=    {pokemonList.length } setCurrentPage={setCurrentPage} totalPokemonsType={pokemonType.length} isPaginated={isPaginated}/>
-            </div>  
-        </main>
+            </div>
+        </div>
+ 
     )
 } 
 

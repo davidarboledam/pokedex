@@ -1,0 +1,9 @@
+.footer{
+    padding: 1rem;
+    background-color: black;
+    background-image: linear-gradient(gray, black);
+    font-size: .87rem;
+    color: white ;
+    display: block;
+    box-sizing: border-box;
+}
